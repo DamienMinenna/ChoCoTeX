@@ -56,7 +56,7 @@ Write your LaTeX equation in the text area. You do not need to add $$. For examp
 
 You can modify the font size and the color. The background is transparent. You can use the "Copy PDF to clipboard" button.
 
-### Warning
+#### Warning
 
 If you use non valide TeX commands or the incorrect environment, such as a math command in the text environment, pdflatex will crash. A 15 seconds timer is set before the pdflatex process is killed.
 
