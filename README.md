@@ -25,7 +25,7 @@ python -m pip install Django
 You can download the git project or directly clone it.
 
 ```bash
-git clone ...
+git clone https://github.com/DamienMinenna/GroTeX.git
 ```
 
 Finally just launch the server. (Migration are not required).
