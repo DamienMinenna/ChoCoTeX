@@ -16,7 +16,7 @@ You also need the last version of Python (check the version with "python3 -V").
 sudo apt-get install python3.7
 ```
 
-Finally install Django.
+Install Django.
 
 ```bash
 python -m pip install Django
@@ -28,9 +28,10 @@ You can download the git project or directly clone it.
 git clone https://github.com/DamienMinenna/GroTeX.git
 ```
 
-Finally just launch the server. (Migration are not required).
+Finally, just launch the server from the GroTeX folder. (Migrations are not required).
 
 ```bash
+cd GroTeX
 python manage.py runserver
 ```
 
