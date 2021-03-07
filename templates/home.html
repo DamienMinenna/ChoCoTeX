@@ -1,0 +1,164 @@
+{% load static%}<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" href="static/img/logo.png">
+    <meta charset="utf-8">
+    <title>GroTeX</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"> -->
+  </head>
+  <body>
+
+    <!-- navbar -->
+    <ul class="nav navbar-success bg-success">
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="/" style="color:white">
+          &nbsp <img src="static/img/logo.png" alt="" width="15">
+          GroTeX
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#helpModal" style="color:white">
+          Help
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#logModal" style="color:white">
+          Packages/Issues
+        </a>
+      </li>
+    </ul>
+
+    <!-- Body intro and modal -->
+    <div class="container bottom-margin">
+      <div class="row">
+        <div class="col">
+          <h1>GroTeX</h1>
+          <p>
+            Quicky transform your equation into a vector PDF with a transparent background!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="helpModalLabel">Quick start</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Write your equation using LaTeX language. <br>
+            Choose font size (between 1 and 100 pt) and color.<br>
+            Default environement is align* but can be changed.
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="logModalLabel">Available packages</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            amsmath, amssymb
+          </div>
+          <div class="modal-header">
+            <h5 class="modal-title">Known issues</h5>
+          </div>
+          <div class="modal-body">
+            Sometime, the image crop is not centered on the equation. <br>
+            Equations with too large font size can overlap the allowed document size. You can reduce the fontsize.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LaTeX form -->
+    <div class="container bottom-margin">
+      <form action="{% url 'my_tex_form' %}">
+        <!-- <label for="text_eq">Write your equation:</label> -->
+        <textarea id="text_eq" name="fulltextarea" class="form-control bottom-margin" rows="5" data-toggle="tooltip" data-placement="top" title="Environement {align*}">{{ text_tex }}</textarea>
+
+        <!-- <input class="btn btn-success" type="submit" value="Generate PDF"/> -->
+        <div class="btn-group">
+          <button type="submit" class="btn btn-success" name="env_tex" value="1">Generate PDF</button>
+          <button type="submit" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+          </button>
+          <ul class="dropdown-menu">
+            <li><button class="dropdown-item" type="submit" name="env_tex" value="1">{align*} (default)</button></li>
+            <li><button class="dropdown-item" type="submit" name="env_tex" value="2">{equation*}</button></li>
+            <li><button class="dropdown-item" type="submit" name="env_tex" value="3">$inline math$</button></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><button class="dropdown-item" type="submit" name="env_tex" value="4">Text</button></li>
+          </ul>
+        </div>
+        &nbsp
+        <label for="font_size">Font size:</label>
+        <input type="number" id="font_size" name="font_size" min="1" max="100" data-toggle="tooltip" data-placement="bottom" title="Between 1 and 200 pt" value="{{ fontsize }}" step=".1">
+        &nbsp
+        <label for="favcolor">Color:</label>
+        <input type="color" id="favcolor" name="favcolor" value="{{ color }}">
+      </form>
+    </div>
+
+    <!-- Clear button -->
+    <div class="container bottom-margin">
+      <div class="row">
+        <div class="col-5">
+          <form action="{% url 'home' %}">
+            <input class="btn btn-secondary" type="submit" value="Clear all"/>
+          </form>
+        </div>
+        <div class="col">
+          <button type="button" class="btn btn-success js-copy-PDF" style="{{ display_pdf }}">
+            Copy PDF to clipboard
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Warning LaTeX -->
+    <div class="container" style="{{ display_error_compitex }}">
+      <div class="alert alert-warning" role="alert">
+        Warning: LaTeX compilation timeout. Check if you are using valid TeX commands with the adequate environement.
+      </div>
+    </div>
+
+    <!-- PDF viewer -->
+    <div class="container" style="{{ display_pdf }}">
+      <embed src="{% static 'img/GroTeX.pdf' %}" width="100%" height="350px" />
+    </div>
+
+    <!-- footer -->
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted">© 2021 <a href="https://damienminenna.github.io/" target="_blank">Damien Minenna</a></span>
+      </div>
+    </footer>
+
+    <style>
+      .bottom-margin {
+         margin-bottom: 10px;
+      }
+    </style>
+
+
+    <script language="JavaScript" type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript" src="static/js/clipboard.js"></script>
+
+  </body>
+</html>
