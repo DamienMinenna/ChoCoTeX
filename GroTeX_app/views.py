@@ -1,97 +1,178 @@
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+
 import os
+from os import listdir
+from os.path import isfile, join
 import subprocess
 from subprocess import STDOUT, check_output
 import time
 import sys
 
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from random import randint
+import re
 
-def writeuser_tex(text_tex,env):
+from .writeTeX import writeuser_tex, writeuser_cmd
 
-    if env == 1:
-        text_file = open("latex/user_eq.tex", "w")
-        text_file.write(r"\begin{align*}")
-        text_file.write("\n")
-        text_file.write(r"%s" % text_tex)
-        text_file.write("\n")
-        text_file.write(r"\end{align*}")
-        text_file.close()
-    elif env == 2:
-        text_file = open("latex/user_eq.tex", "w")
-        text_file.write(r"\begin{equation*}")
-        text_file.write("\n")
-        text_file.write(r"%s" % text_tex)
-        text_file.write("\n")
-        text_file.write(r"\end{equation*}")
-        text_file.close()
-    elif env == 3:
-        text_file = open("latex/user_eq.tex", "w")
-        text_file.write(r"$ %s $" % text_tex)
-        text_file.close()
-    elif env == 4:
-        text_file = open("latex/user_eq.tex", "w")
-        text_file.write(r"%s" % text_tex)
-        text_file.close()
+isServer = False
+allowedPDF = 10000
 
+
+def isFloat(string):
+    try:
+        float(string)
+        return True
+    except ValueError:
+        return False
 
 def home(request):
 
     fontsize = 34
-    display_error_compitex = 'display:none;'
-    display_pdf = 'display:none;'
+    display_error = 0
+    display_pdf = False
     color = '#000000'
 
+    if isServer:
+        user_id = randint(10000001, 99999999)
+    else:
+        user_id = 10000000
+
     return render(request, 'home.html', {
-        'display_error_compitex': display_error_compitex,
+        'display_error': display_error,
         'display_pdf': display_pdf,
         'fontsize' : fontsize,
         'color' : color,
+        'user_id' : user_id,
         })
 
 
 def generate_PDF(request):
 
-    text_tex = request.GET['fulltextarea']
-    fontsize = request.GET['font_size']
-    color = request.GET['favcolor']
-    env_tex = request.GET['env_tex']
-    display_error_compitex = 'display:none;'
+    security_issues = False
 
-    if not text_tex:
-        text_tex = ''
-        display_pdf = 'display:none;'
+    my_tex_form_element = ['user_id','fulltextarea','font_size','favcolor','env_tex']
+
+    for i in my_tex_form_element:
+        if i not in request.GET :
+            security_issues = True
+            print(security_issues)
+
+    if not security_issues:
+        user_id = request.GET['user_id']
+        text_tex = request.GET['fulltextarea']
+        fontsize = request.GET['font_size']
+        color = request.GET['favcolor']
+        env_tex = request.GET['env_tex']
+        display_error = 0
+
+        # Check and security
+        if not user_id.isnumeric():
+            if isServer:
+                user_id = randint(10000001, 99999999)
+            else:
+                user_id = 10000000
+
+        elif ((int(user_id) < 10000000) or (int(user_id) > 99999999)):
+            if isServer:
+                user_id = randint(10000001, 99999999)
+            else:
+                user_id = 10000000
+
+        # Check and security
+        if not isFloat(fontsize):
+            fontsize = 34
+            display_error = 3
+            display_pdf = False
+            loc_pdf_File = ' '
+            security_issues = True
+
+        elif ((float(fontsize) < 1.) or (float(fontsize) > 100.)):
+            fontsize = 34
+            display_error = 3
+            display_pdf = False
+            loc_pdf_File = ' '
+            security_issues = True
+
+        # Check and security
+        if not re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', color):
+            display_error = 4
+            color = '#000000'
+            display_pdf = False
+            loc_pdf_File = ' '
+            security_issues = True
+
+        # Check and security
+        if ((int(env_tex) < 1) or (int(env_tex) > 4)):
+            display_error = 5
+            display_pdf = False
+            loc_pdf_File = ' '
+            security_issues = True
 
     else:
-        display_pdf = ' '
+        if isServer:
+            user_id = randint(10000001, 99999999)
+        else:
+            user_id = 10000000
+        text_tex = ''
+        fontsize = 34
+        color = '#000000'
+        display_error = 6
+        display_pdf = False
+        loc_pdf_File = ' '
 
-        writeuser_tex(text_tex,int(env_tex))
 
-        text_file = open(r"latex/user_cmd.tex", "w")
-        text_file.write(r"\def\myfontsize{%s}" % str(fontsize))
-        text_file.write("\n")
-        text_file.write(r"\def\myfontsizeplus{%s}" % str(float(fontsize)+5))
-        text_file.write("\n")
-        text_file.write(r"\definecolor{mycolor}{HTML}{%s}" % color[1:])
-        text_file.close()
 
-        srtcmd = (r'pdflatex -output-directory=static/img/ latex/GroTeX.tex')
+    if not security_issues:
+        if not text_tex:
+            text_tex = ''
+            display_pdf = False
+            loc_pdf_File = ' '
 
-        # os.system(srtcmd)
-        proc = subprocess.Popen(srtcmd,shell=True,stderr=subprocess.PIPE,stdout=subprocess.PIPE)
+        else:
+            display_pdf = True
+            writeuser_tex(text_tex,int(env_tex))
+            writeuser_cmd(fontsize,color)
 
-        try:
-            outs, errs = proc.communicate(timeout=15)
-        except subprocess.TimeoutExpired:
-            proc.kill()
-            outs, errs = proc.communicate()
-            display_error_compitex = ' '
-            display_pdf = 'display:none;'
+            # Check if the number of PDF file remains small
+            if len([f for f in listdir('static/pdf/') if isfile(join('static/pdf/', f))]) < allowedPDF:
+
+                srtcmd = (r'pdflatex -output-directory=static/pdf/ latex/GroTeX_temp.tex')
+                # os.system(srtcmd)
+                proc = subprocess.Popen(srtcmd,shell=True,stderr=subprocess.PIPE,stdout=subprocess.PIPE)
+
+                try:
+                    outs, errs = proc.communicate(timeout=15)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    outs, errs = proc.communicate()
+                    display_error = 1
+                    display_pdf = False
+                    loc_pdf_File = ' '
+
+                if os.path.exists('static/pdf/GroTeX_temp.pdf'):
+                    os.system('mv static/pdf/GroTeX_temp.pdf static/pdf/GroTeXv'+ str(user_id) + '.pdf')
+                    loc_pdf_File = ('/static/pdf/GroTeXv'+ str(user_id) + '.pdf')
+                else:
+                    display_error = 1
+                    display_pdf = False
+                    loc_pdf_File = ' '
+
+            else:
+                display_error = 2
+                display_pdf = False
+                loc_pdf_File = ' '
+
+    #security_issues
+
+    print('/static/pdf/GroTeXv10000000.pdf')
+    print(loc_pdf_File)
 
     return render(request, 'home.html', {
         'text_tex': text_tex,
-        'display_error_compitex': display_error_compitex,
+        'display_error': display_error,
         'display_pdf': display_pdf,
         'fontsize' : fontsize,
         'color' : color,
+        'user_id' : user_id,
+        'loc_pdf_File': loc_pdf_File
         })

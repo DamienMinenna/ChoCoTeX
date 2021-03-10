@@ -3,10 +3,30 @@
   <head>
     <link rel="icon" href="static/img/logo.png">
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GroTeX</title>
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"> -->
+    <!-- <link rel="stylesheet" href="/static/css/bootstrap.min.css"> -->
+
+    <link rel="stylesheet" href="/static/css/all.css">
   </head>
+
+  <style>
+    #progressbar {
+      display: none;
+    }
+    .footer {
+     position: fixed;
+     left: 0;
+     bottom: 0;
+     width: 100%;
+    }
+  </style>
+
   <body>
 
     <!-- navbar -->
@@ -18,13 +38,23 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#helpModal" style="color:white">
-          Help
+        <a class="nav-link ShowTipsBtn" aria-current="page" style="color:white">
+          <i class="fas fa-question-circle"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#packModal" style="color:white">
+          <i class="fas fa-truck-loading"></i>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#logModal" style="color:white">
-          Packages/Issues
+          <i class="fas fa-bug"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="https://github.com/DamienMinenna/GroTeX" target="_blank" style="color:white">
+         <i class="fab fa-github-square"></i>
         </a>
       </li>
     </ul>
@@ -35,25 +65,22 @@
         <div class="col">
           <h1>GroTeX</h1>
           <p>
-            Quicky transform your equation into a vector PDF with a transparent background!
+            Quicky transform your LaTeX equations into vector PDF with transparent background!
           </p>
         </div>
       </div>
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal fade" id="packModal" tabindex="-1" aria-labelledby="packModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="helpModalLabel">Quick start</h5>
+            <h5 class="modal-title" id="packModalLabel">Available packages</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            Write your equation using LaTeX language. <br>
-            Choose font size (between 1 and 100 pt) and color.<br>
-            Default environement is align* but can be changed.
-
+            amsmath, amssymb
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -64,19 +91,12 @@
     <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="logModalLabel">Available packages</h5>
+          <div class="modal-header" id="logModalLabel">
+            <h5 class="modal-title">Known issues</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            amsmath, amssymb
-          </div>
-          <div class="modal-header">
-            <h5 class="modal-title">Known issues</h5>
-          </div>
-          <div class="modal-body">
-            Sometime, the image crop is not centered on the equation. <br>
-            Equations with too large font size can overlap the allowed document size. You can reduce the fontsize.
+            - Bad cropping and centering: try to change the font size. <br>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -89,61 +109,150 @@
     <div class="container bottom-margin">
       <form action="{% url 'my_tex_form' %}">
         <!-- <label for="text_eq">Write your equation:</label> -->
-        <textarea id="text_eq" name="fulltextarea" class="form-control bottom-margin" rows="5" data-toggle="tooltip" data-placement="top" title="Environement {align*}">{{ text_tex }}</textarea>
+        <textarea id="text_eq" name="fulltextarea" class="form-control bottom-margin tip-container" rows="5" data-toggle="tooltip" data-placement="top" data-bs-toggle="popover" data-bs-content="Write your equation using LaTeX language. For example, try: E = m c^2">{{ text_tex }}</textarea>
 
         <!-- <input class="btn btn-success" type="submit" value="Generate PDF"/> -->
         <div class="btn-group">
-          <button type="submit" class="btn btn-success" name="env_tex" value="1">Generate PDF</button>
-          <button type="submit" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+          <button type="submit" class="btn btn-success bottom-margin" name="env_tex" value="1" onclick="display_progressbar()">
+            <i class="far fa-file-pdf"></i> &nbsp Generate PDF
+          </button>
+          <button type="submit" class="btn btn-success dropdown-toggle dropdown-toggle-split bottom-margin" data-bs-toggle="dropdown" aria-expanded="false">
           </button>
           <ul class="dropdown-menu">
-            <li><button class="dropdown-item" type="submit" name="env_tex" value="1">{align*} (default)</button></li>
-            <li><button class="dropdown-item" type="submit" name="env_tex" value="2">{equation*}</button></li>
-            <li><button class="dropdown-item" type="submit" name="env_tex" value="3">$inline math$</button></li>
+            <li><button class="dropdown-item" type="submit" name="env_tex" value="1" onclick="display_progressbar()">{align*} (default)</button></li>
+            <li><button class="dropdown-item" type="submit" name="env_tex" value="2" onclick="display_progressbar()">{equation*}</button></li>
+            <li><button class="dropdown-item" type="submit" name="env_tex" value="3" onclick="display_progressbar()">$inline math$</button></li>
             <li><hr class="dropdown-divider"></li>
             <li><button class="dropdown-item" type="submit" name="env_tex" value="4">Text</button></li>
           </ul>
         </div>
         &nbsp
-        <label for="font_size">Font size:</label>
-        <input type="number" id="font_size" name="font_size" min="1" max="100" data-toggle="tooltip" data-placement="bottom" title="Between 1 and 200 pt" value="{{ fontsize }}" step=".1">
+        <label for="font_size" class="form-label tip-container" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Font size"><span class="material-icons">format_size</span></label>
+        <input type="number" id="font_size" name="font_size" min="1" max="100" value="{{ fontsize }}" step=".1">
         &nbsp
-        <label for="favcolor">Color:</label>
-        <input type="color" id="favcolor" name="favcolor" value="{{ color }}">
+        <!-- <label for="favcolor"><i class="fas fa-palette"></i></label> -->
+        <label for="favcolor" class="form-label"><i class="fas fa-palette"></i></label>
+        <input class="tip-container" type="color" id="favcolor" name="favcolor" value="{{ color }}" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Text color">
+        <input type="number" name="user_id" value="{{ user_id }}" style="display:none;">
       </form>
     </div>
 
-    <!-- Clear button -->
     <div class="container bottom-margin">
-      <div class="row">
-        <div class="col-5">
-          <form action="{% url 'home' %}">
-            <input class="btn btn-secondary" type="submit" value="Clear all"/>
-          </form>
-        </div>
-        <div class="col">
-          <button type="button" class="btn btn-success js-copy-PDF" style="{{ display_pdf }}">
-            Copy PDF to clipboard
+
+      <!-- Clear button -->
+      <form action="{% url 'home' %}">
+        <div class="d-flex bd-highlight mb-4">
+
+          <div class="p-2 bd-highlight">
+            <!-- <input class="btn btn-secondary" type="submit" value="Clear all"/> -->
+            <button type="submit" class="btn btn-secondary tip-container" type="submit" data-bs-toggle="popover" data-bs-placement="left" data-bs-content="Clear all">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+
+          {% if not display_pdf %}
+          <div class="p-2 bd-highlight">
+            <button type="button" class="btn btn-success disabled tip-container" data-bs-toggle="popover" data-bs-placement="bottom" title="Copy to clipboard" data-bs-content="Then, you can past it on in typesetting (word) or presentation (powerpoint) softwares.">
+              <i class="far fa-clipboard"></i>
+            </button>
+          </div>
+
+          <div class="p-2 bd-highlight">
+            <a type="button" class="btn btn-success tip-container disabled" data-bs-toggle="popover" data-bs-content="Download PDF">
+              <i class="fas fa-download"></i>
+            </a>
+          </div>
+          {% endif %}
+
+
+          {% if display_pdf %}
+          <div class="p-2 bd-highlight">
+            <button type="button" id='btn_copy' class="btn btn-success js-copy-PDF tip-container" data-bs-toggle="popover" data-bs-placement="bottom" title="Copy to clipboard" data-bs-content="Then, you can past it on in typesetting (word) or presentation (powerpoint) softwares.">
+            <i class="far fa-clipboard"></i>
           </button>
         </div>
-      </div>
+
+          <div class="p-2 bd-highlight">
+            <a type="button" class="btn btn-success tip-container" href="{{ loc_pdf_File }}" target="_blank" data-bs-toggle="popover" data-bs-content="Download PDF">
+            <i class="fas fa-download"></i>
+          </a>
+        </div>
+          {% endif %}
+
+          <div class="p-2 bd-highlight">
+            <span class="spinner-border text-success" role="status" aria-hidden="true" id="progressbar"></span>
+          </div>
+        </div>
+
+      </form>
+
     </div>
 
+    {% if display_error == 1 %}
     <!-- Warning LaTeX -->
-    <div class="container" style="{{ display_error_compitex }}">
+    <div class="container">
       <div class="alert alert-warning" role="alert">
-        Warning: LaTeX compilation timeout. Check if you are using valid TeX commands with the adequate environement.
+        <i class="fas fa-exclamation"></i> Warning: LaTeX compilation timeout.
+        Check if you are using valid TeX commands with the adequate environement.
       </div>
     </div>
+    {% endif %}
 
-    <!-- PDF viewer -->
-    <div class="container" style="{{ display_pdf }}">
-      <embed src="{% static 'img/GroTeX.pdf' %}" width="100%" height="350px" />
+    {% if display_error == 2 %}
+    <!-- Warning LaTeX -->
+    <div class="container">
+      <div class="alert alert-warning" role="alert">
+        <i class="fas fa-exclamation"></i> Warning: To many recent requests. Please wait 10 minutes.
+      </div>
     </div>
+    {% endif %}
+
+    {% if display_error == 3 %}
+    <!-- Warning LaTeX -->
+    <div class="container">
+      <div class="alert alert-warning" role="alert">
+        <i class="fas fa-exclamation"></i> Warning: Font size must be between 1 and 100 pt.
+      </div>
+    </div>
+    {% endif %}
+
+    {% if display_error == 4 %}
+    <!-- Warning LaTeX -->
+    <div class="container">
+      <div class="alert alert-warning" role="alert">
+        <i class="fas fa-exclamation"></i> Warning: Invalid color.
+      </div>
+    </div>
+    {% endif %}
+
+    {% if display_error == 5 %}
+    <!-- Warning LaTeX -->
+    <div class="container">
+      <div class="alert alert-warning" role="alert">
+        <i class="fas fa-exclamation"></i> Warning: Invalid environement.
+      </div>
+    </div>
+    {% endif %}
+
+    {% if display_error == 6 %}
+    <!-- Warning LaTeX -->
+    <div class="container">
+      <div class="alert alert-warning" role="alert">
+        Warning: Invalid request.
+      </div>
+    </div>
+    {% endif %}
+
+    {% if display_pdf %}
+    <!-- PDF viewer -->
+    <div class="container">
+      <embed src="{{ loc_pdf_File }}" width="100%" height="350px" />
+    </div>
+    {% endif %}
 
     <!-- footer -->
     <footer class="footer">
-      <div class="container">
+      <div class="container bottom-margin">
         <span class="text-muted">© 2021 <a href="https://damienminenna.github.io/" target="_blank">Damien Minenna</a></span>
       </div>
     </footer>
@@ -154,11 +263,76 @@
       }
     </style>
 
-
     <script language="JavaScript" type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script language="JavaScript" type="text/javascript" src="static/js/jquery-3.6.0.min.js"></script>
+    <script src="static/js/bootstrap.bundle.min.js"></script> -->
 
-    <script type="text/javascript" src="static/js/clipboard.js"></script>
+    {% if display_pdf %}
+    <script>
+    function copyImage(url){
+        var img=document.createElement('img');
+        img.src=url;
+        document.body.appendChild(img);
+        var r = document.createRange();
+        r.setStartBefore(img);
+        r.setEndAfter(img);
+        r.selectNode(img);
+        var sel = window.getSelection();
+        sel.addRange(r);
+        document.execCommand('Copy');
+    }
+
+    var copyPDF = document.querySelector('.js-copy-PDF');
+
+    var pathPDF = "{{ loc_pdf_File }}"
+
+    copyPDF.addEventListener('click', function(event) {
+      copyImage(pathPDF)
+
+      // cache.add(pathPDF)
+
+      $('#btn_copy').on('shown.bs.popover', function() {
+
+        $('.js-copy-PDF').popover({
+            content:'new content',
+            title:'new title',
+            placement:'bottom'
+        });
+
+        setTimeout(function() {
+        $('.js-copy-PDF').popover('hide');
+        }, 1000);
+
+      });
+
+    });
+    </script>
+    {% endif %}
+
+    <script>
+    function display_progressbar() {
+      document.getElementById("progressbar").style.display = "block";
+    }
+    </script>
+
+    <script>
+      var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+      var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        // return new bootstrap.Popover(popoverTriggerEl)
+        return new bootstrap.Popover(popoverTriggerEl, {delay: { "show": 0, "hide": 0 }})
+      })
+    </script>
+
+    <script>
+      var showTip = document.querySelector('.ShowTipsBtn');
+
+      showTip.addEventListener('click', function(event)
+      {
+      // $('.tip-container').popover({delay: { "show": 1100, "hide": 0 }});
+      $('.tip-container').popover('toggle');
+      });
+    </script>
 
   </body>
 </html>

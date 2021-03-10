@@ -4,6 +4,7 @@ GroTeX is an open-source web application to generate vector PDF with a transpare
 
 ## Installation
 
+Commands must be executed on a shell terminal.
 GroTeX needs pdflatex to work. Check on a terminal it is installed.
 
 ```bash
@@ -28,9 +29,10 @@ You can download the git project or directly clone it.
 git clone https://github.com/DamienMinenna/GroTeX.git
 ```
 
-Finally just launch the server. (Migration are not required).
+Finally just launch the server.
 
 ```bash
+python manage.py migrate
 python manage.py runserver
 ```
 
@@ -53,11 +55,17 @@ Write your LaTeX equation in the text area. You do not need to add $$. For examp
 {\bf g}_{\rm cano} = \frac{n_\phi n_{\rm g}}{c^2} {\bf E} \times {\bf H}
 ```
 
-You can modify the font size and the color. The background is transparent. You can use the "Copy PDF to clipboard" button.
+You can modify the font size and the color. The background is transparent.
+After the creation of the PDF, you can use the "Copy PDF to clipboard" and the download functions.
 
-### Warning
+### Server usage
 
-If you use non valide TeX commands or the incorrect environment, such as a math command in the text environment, pdflatex will crash. A 15 seconds timer is set before the pdflatex process is killed.
+To manage several users (or several opened windows), just modify the value "isServer" to "True" in the GroTeX_app/views.py. Generated PDF will get random id.
+Then run on another terminal tab
+```bash
+python manage.py pdf_management
+```
+This will remove generated PDF after 10 minutes (check every 5 minutes).
 
 ## Contributing
 
