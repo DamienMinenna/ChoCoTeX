@@ -17,7 +17,7 @@ You also need the last version of Python (check the version with "python3 -V").
 sudo apt-get install python3.7
 ```
 
-Finally install Django.
+Install Django.
 
 ```bash
 python -m pip install Django
