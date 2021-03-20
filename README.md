@@ -1,3 +1,5 @@
+![preview](https://raw.githubusercontent.com/DamienMinenna/ChoCoTeX/main/static/img/ChoCoTeX-preview.png?raw=true "Preview")
+
 # ChoCoTeX
 
 ChoCoTeX is an open-source web application to generate vector PDF with a transparent background from LaTeX equations. Those PDF can be copied in the clipboard and immediately pasted in typesetting or presentation softwares, such as Word or PowerPoint. ChoCoTeX use the web framework Django.
