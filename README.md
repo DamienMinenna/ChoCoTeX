@@ -18,7 +18,7 @@ pdflatex --version
 ```
 else install it
 ```bash
-sudo apt-get install texlive-full
+sudo apt-get install texlive-latex-base texlive-latex-extra
 ```
 
 You also need the last version of Python (check the version with "python3 -V").
