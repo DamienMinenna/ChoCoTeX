@@ -136,7 +136,7 @@ def generate_PDF(request):
             # Check if the number of PDF file remains small
             if len([f for f in listdir('static/pdf/') if isfile(join('static/pdf/', f))]) < allowedPDF:
 
-                srtcmd = (r'pdflatex -output-directory=static/pdf/ latex/GroTeX_temp.tex')
+                srtcmd = (r'pdflatex -output-directory=static/pdf/ latex/ChoCoTeX_temp.tex')
                 # os.system(srtcmd)
                 proc = subprocess.Popen(srtcmd,shell=True,stderr=subprocess.PIPE,stdout=subprocess.PIPE)
 
