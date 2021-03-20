@@ -149,9 +149,9 @@ def generate_PDF(request):
                     display_pdf = False
                     loc_pdf_File = ' '
 
-                if os.path.exists('static/pdf/GroTeX_temp.pdf'):
-                    os.system('mv static/pdf/GroTeX_temp.pdf static/pdf/GroTeXv'+ str(user_id) + '.pdf')
-                    loc_pdf_File = ('/static/pdf/GroTeXv'+ str(user_id) + '.pdf')
+                if os.path.exists('static/pdf/ChoCoTeX_temp.pdf'):
+                    os.system('mv static/pdf/ChoCoTeX_temp.pdf static/pdf/ChoCoTeXv'+ str(user_id) + '.pdf')
+                    loc_pdf_File = ('/static/pdf/ChoCoTeXv'+ str(user_id) + '.pdf')
                 else:
                     display_error = 1
                     display_pdf = False
@@ -164,7 +164,7 @@ def generate_PDF(request):
 
     #security_issues
 
-    print('/static/pdf/GroTeXv10000000.pdf')
+    print('/static/pdf/ChoCoTeXv10000000.pdf')
     print(loc_pdf_File)
 
     return render(request, 'home.html', {

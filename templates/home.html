@@ -3,8 +3,9 @@
   <head>
     <link rel="icon" href="static/img/logo.png">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GroTeX</title>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi">
+    <title>ChoCoTeX</title>
 
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -16,6 +17,14 @@
   </head>
 
   <style>
+    .my-color{
+    color: white;
+    background-color: #8B4513;
+    }
+    .spinner-color {
+      color: #8B4513;
+    }
+
     #progressbar {
       display: none;
     }
@@ -30,11 +39,12 @@
   <body>
 
     <!-- navbar -->
-    <ul class="nav navbar-success bg-success">
+    <!-- <ul class="nav navbar-success bg-success"> -->
+    <ul class="nav my-color">
       <li class="nav-item">
         <a class="nav-link" aria-current="page" href="/" style="color:white">
           &nbsp <img src="static/img/logo.png" alt="" width="15">
-          GroTeX
+          ChoCoTeX
         </a>
       </li>
       <li class="nav-item">
@@ -53,7 +63,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" aria-current="page" href="https://github.com/DamienMinenna/GroTeX" target="_blank" style="color:white">
+        <a class="nav-link" aria-current="page" href="https://github.com/DamienMinenna/ChoCoTeX" target="_blank" style="color:white">
          <i class="fab fa-github-square"></i>
         </a>
       </li>
@@ -63,7 +73,7 @@
     <div class="container bottom-margin">
       <div class="row">
         <div class="col">
-          <h1>GroTeX</h1>
+          <h1>ChoCoTeX</h1>
           <p>
             Quicky transform your LaTeX equations into vector PDF with transparent background!
           </p>
@@ -113,10 +123,10 @@
 
         <!-- <input class="btn btn-success" type="submit" value="Generate PDF"/> -->
         <div class="btn-group">
-          <button type="submit" class="btn btn-success bottom-margin" name="env_tex" value="1" onclick="display_progressbar()">
+          <button type="submit" class="btn my-color bottom-margin" name="env_tex" value="1" onclick="display_progressbar()">
             <i class="far fa-file-pdf"></i> &nbsp Generate PDF
           </button>
-          <button type="submit" class="btn btn-success dropdown-toggle dropdown-toggle-split bottom-margin" data-bs-toggle="dropdown" aria-expanded="false">
+          <button type="submit" class="btn my-color dropdown-toggle dropdown-toggle-split bottom-margin" data-bs-toggle="dropdown" aria-expanded="false" data-bs-content="Choose your environement">
           </button>
           <ul class="dropdown-menu">
             <li><button class="dropdown-item" type="submit" name="env_tex" value="1" onclick="display_progressbar()">{align*} (default)</button></li>
@@ -152,13 +162,13 @@
 
           {% if not display_pdf %}
           <div class="p-2 bd-highlight">
-            <button type="button" class="btn btn-success disabled tip-container" data-bs-toggle="popover" data-bs-placement="bottom" title="Copy to clipboard" data-bs-content="Then, you can past it on in typesetting (word) or presentation (powerpoint) softwares.">
+            <button type="button" class="btn my-color disabled tip-container" data-bs-toggle="popover" data-bs-placement="bottom" title="Copy to clipboard" data-bs-content="Then, you can past it on in typesetting (word) or presentation (powerpoint) softwares.">
               <i class="far fa-clipboard"></i>
             </button>
           </div>
 
           <div class="p-2 bd-highlight">
-            <a type="button" class="btn btn-success tip-container disabled" data-bs-toggle="popover" data-bs-content="Download PDF">
+            <a type="button" class="btn my-color tip-container disabled" data-bs-toggle="popover" data-bs-content="Download PDF">
               <i class="fas fa-download"></i>
             </a>
           </div>
@@ -167,20 +177,20 @@
 
           {% if display_pdf %}
           <div class="p-2 bd-highlight">
-            <button type="button" id='btn_copy' class="btn btn-success js-copy-PDF tip-container" data-bs-toggle="popover" data-bs-placement="bottom" title="Copy to clipboard" data-bs-content="Then, you can past it on in typesetting (word) or presentation (powerpoint) softwares.">
+            <button type="button" id='btn_copy' class="btn my-color js-copy-PDF tip-container" data-bs-toggle="popover" data-bs-placement="bottom" title="Copy to clipboard" data-bs-content="Then, you can past it on in typesetting (word) or presentation (powerpoint) softwares.">
             <i class="far fa-clipboard"></i>
           </button>
         </div>
 
           <div class="p-2 bd-highlight">
-            <a type="button" class="btn btn-success tip-container" href="{{ loc_pdf_File }}" target="_blank" data-bs-toggle="popover" data-bs-content="Download PDF">
+            <a type="button" class="btn my-color tip-container" href="{{ loc_pdf_File }}" target="_blank" data-bs-toggle="popover" data-bs-content="Download PDF">
             <i class="fas fa-download"></i>
           </a>
         </div>
           {% endif %}
 
           <div class="p-2 bd-highlight">
-            <span class="spinner-border text-success" role="status" aria-hidden="true" id="progressbar"></span>
+            <span class="spinner-border spinner-color" role="status" aria-hidden="true" id="progressbar"></span>
           </div>
         </div>
 

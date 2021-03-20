@@ -1,11 +1,11 @@
-# GroTeX
+# ChoCoTeX
 
-GroTeX is an open-source web application to generate vector PDF with a transparent background from LaTeX equations. Those PDF can be copied in the clipboard and immediately pasted in typesetting or presentation softwares, such as Word or PowerPoint. GroTeX use the web framework Django.
+ChoCoTeX is an open-source web application to generate vector PDF with a transparent background from LaTeX equations. Those PDF can be copied in the clipboard and immediately pasted in typesetting or presentation softwares, such as Word or PowerPoint. ChoCoTeX use the web framework Django.
 
 ## Installation
 
 Commands must be executed on a shell terminal.
-GroTeX needs pdflatex to work. Check on a terminal it is installed.
+ChoCoTeX needs pdflatex to work. Check on a terminal it is installed.
 
 ```bash
 pdflatex --version
@@ -26,7 +26,7 @@ python -m pip install Django
 You can download the git project or directly clone it.
 
 ```bash
-git clone https://github.com/DamienMinenna/GroTeX.git
+git clone https://github.com/DamienMinenna/ChoCoTeX.git
 ```
 
 Finally just launch the server.
@@ -39,14 +39,14 @@ python manage.py runserver
 The following message should appear
 
 ```bash
-Django version 3.1.7, using settings 'GroTeX.settings'
+Django version 3.1.7, using settings 'ChoCoTeX.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
 
 You must leave open the terminal.
 
-Now, you can open GroTeX using any web browser at the address: http://127.0.0.1:8000/
+Now, you can open ChoCoTeX using any web browser at the address: http://127.0.0.1:8000/
 
 ## Usage
 
@@ -60,7 +60,7 @@ After the creation of the PDF, you can use the "Copy PDF to clipboard" and the d
 
 ### Server usage
 
-To manage several users (or several opened windows), just modify the value "isServer" to "True" in the GroTeX_app/views.py. Generated PDF will get random id.
+To manage several users (or several opened windows), just modify the value "isServer" to "True" in the ChoCoTeX_app/views.py. Generated PDF will get random id.
 Then run on another terminal tab
 ```bash
 python manage.py pdf_management
