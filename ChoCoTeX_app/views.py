@@ -13,6 +13,8 @@ import sys
 from random import randint
 import re
 
+from django.conf import settings
+
 from .writeTeX import writeuser_tex, writeuser_cmd
 
 isServer = False
@@ -135,9 +137,9 @@ def generate_PDF(request):
             writeuser_cmd(fontsize,color)
 
             # Check if the number of PDF file remains small
-            if len([f for f in listdir('static/pdf/') if isfile(join('static/pdf/', f))]) < allowedPDF:
+            if len([f for f in listdir('media/pdf/') if isfile(join('media/pdf/', f))]) < allowedPDF:
 
-                srtcmd = (r'pdflatex -output-directory=static/pdf/ latex/ChoCoTeX_temp.tex')
+                srtcmd = (r'pdflatex -output-directory=media/pdf/ latex/ChoCoTeX_temp.tex')
                 # os.system(srtcmd)
                 proc = subprocess.Popen(srtcmd,shell=True,stderr=subprocess.PIPE,stdout=subprocess.PIPE)
 
@@ -150,9 +152,9 @@ def generate_PDF(request):
                     display_pdf = False
                     loc_pdf_File = ' '
 
-                if os.path.exists('static/pdf/ChoCoTeX_temp.pdf'):
-                    os.system('mv static/pdf/ChoCoTeX_temp.pdf static/pdf/ChoCoTeXv'+ str(user_id) + '.pdf')
-                    loc_pdf_File = ('/static/pdf/ChoCoTeXv'+ str(user_id) + '.pdf')
+                if os.path.exists('media/pdf/ChoCoTeX_temp.pdf'):
+                    os.system('mv media/pdf/ChoCoTeX_temp.pdf media/pdf/ChoCoTeXv'+ str(user_id) + '.pdf')
+                    loc_pdf_File = ('/media/pdf/ChoCoTeXv'+ str(user_id) + '.pdf')
                 else:
                     display_error = 1
                     display_pdf = False
@@ -165,9 +167,7 @@ def generate_PDF(request):
 
     #security_issues
 
-    print('/static/pdf/ChoCoTeXv10000000.pdf')
-    print(loc_pdf_File)
-
+    print('file:',loc_pdf_File)
     return render(request, 'home.html', {
         'text_tex': text_tex,
         'display_error': display_error,

@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
+from django.views.static import serve
 
 from ChoCoTeX_app import views
 
 urlpatterns = [
     path(r'', views.home, name='home'),
-    path(r'/', views.generate_PDF,  name="my_tex_form")
+    path(r'/', views.generate_PDF,  name="my_tex_form"),
+    re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     # path('admin/', admin.site.urls),
 ]
