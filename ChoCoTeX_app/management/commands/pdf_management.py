@@ -10,19 +10,19 @@ def rm_PDFfile():
     threading.Timer(5*60, rm_PDFfile).start()
 
     # Remove aux and log files
-    auxfile = 'static/pdf/GroTeX_temp.aux'
+    auxfile = 'media/pdf/GroTeX_temp.aux'
     if os.path.exists(auxfile):
         os.system('rm ' + auxfile)
 
-    logfile = 'static/pdf/GroTeX_temp.log'
+    logfile = 'media/pdf/GroTeX_temp.log'
     if os.path.exists(logfile):
         os.system('rm ' + logfile)
 
     # Get the list of pdf item
-    onlyfiles = [f for f in listdir('static/pdf/') if isfile(join('static/pdf/', f))]
+    onlyfiles = [f for f in listdir('media/pdf/') if isfile(join('media/pdf/', f))]
 
     for f in onlyfiles:
-        pdffile = 'static/pdf/' + f
+        pdffile = 'media/pdf/' + f
 
         t = time.time()
 
