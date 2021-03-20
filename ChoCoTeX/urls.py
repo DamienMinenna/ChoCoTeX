@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
-from django.conf.urls.statics import static
 
 from ChoCoTeX_app import views
 
@@ -25,4 +24,4 @@ urlpatterns = [
     path(r'', views.home, name='home'),
     path(r'/', views.generate_PDF,  name="my_tex_form")
     # path('admin/', admin.site.urls),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
