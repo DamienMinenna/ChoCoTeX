@@ -112,7 +112,7 @@ def generate_PDF(request):
             security_issues = True
 
         # Check text_tex data
-        list_vunerable = ['\include','\input','\openin','\read','\openout','\write','\loop','\while','\@input']
+        list_vunerable = ['\documentclass','\usepackage','\include','\input','\openin','\read','\openout','\write','\loop','\while','\@input']
         if len(text_tex) > 1000:
             display_error = 7
             display_pdf = False
