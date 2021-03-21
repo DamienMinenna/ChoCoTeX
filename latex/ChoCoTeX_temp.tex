@@ -1,7 +1,13 @@
-\documentclass[preview,
+\documentclass[preview=true,
 border=2pt,
-varwidth,
-margin=0mm]{standalone}
+varwidth=0mm,
+margin=0mm,
+crop=true]{standalone}
+
+% \documentclass{article}
+% \usepackage[active, tightpage]{preview}
+% \setlength\PreviewBorder{2pt}%
+
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -16,7 +22,6 @@ margin=0mm]{standalone}
 \begin{document}
 
 \nopagecolor
-
 \begin{center}
 \begingroup
 \color{mycolor}
@@ -26,5 +31,4 @@ margin=0mm]{standalone}
 
 \endgroup
 \end{center}
-
 \end{document}
