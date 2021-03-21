@@ -111,6 +111,27 @@ def generate_PDF(request):
             loc_pdf_File = ' '
             security_issues = True
 
+        # Check text_tex data
+        list_vunerable = ['\include','\input','\openin','\read','\openout','\write','\loop','\while','\@input']
+        if len(text_tex) > 1000:
+            display_error = 7
+            display_pdf = False
+            loc_pdf_File = ' '
+            security_issues = True
+
+        else:
+            for content_vun in list_vunerable:
+                if content_vun in text_tex:
+                    display_error = 8
+                    display_pdf = False
+                    loc_pdf_File = ' '
+                    security_issues = True
+
+
+        if text_tex.endswith('\r\n'):
+            text_tex = text_tex[:-2]
+
+
     else:
         if isServer:
             user_id = randint(10000001, 99999999)

@@ -268,6 +268,24 @@
     </div>
     {% endif %}
 
+    {% if display_error == 7 %}
+    <!-- Warning LaTeX -->
+    <div class="container">
+      <div class="alert alert-warning" role="alert">
+        Warning: Character limit: 1000.
+      </div>
+    </div>
+    {% endif %}
+
+    {% if display_error == 8 %}
+    <!-- Warning LaTeX -->
+    <div class="container">
+      <div class="alert alert-warning" role="alert">
+        Warning: Unauthorized commands
+      </div>
+    </div>
+    {% endif %}
+
     {% if display_pdf %}
     <!-- PDF viewer -->
     <div class="container">
